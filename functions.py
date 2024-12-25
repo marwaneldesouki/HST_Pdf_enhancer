@@ -31,10 +31,12 @@ def fix_arabic_text(cell):
 @memory.cache
 def get_tableList_from_tables(pdfs_tables):
     tablesList = []
-    for tables in pdfs_tables:
+    for i,tables in enumerate(pdfs_tables):
+        _ = [] #list of tables in each pdf
         for table in tables:
             table.df = table.df.map(fix_arabic_text)
-            tablesList.append(table.df)
+            _.append(table.df)
+        tablesList.append(_)
     return tablesList
             
  

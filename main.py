@@ -6,4 +6,7 @@ print(pdfs_tables)
 
 
 tablesList= get_tableList_from_tables(pdfs_tables)
+print(tablesList[1][2])
 print(tablesList.__len__())
+# for i,tableList in enumerate(tablesList):
+#     tableList.to_csv(f"table_{i}.csv")

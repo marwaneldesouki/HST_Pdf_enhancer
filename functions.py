@@ -3,15 +3,13 @@ from langchain.text_splitter import CharacterTextSplitter
 from dotenv import load_dotenv
 import arabic_reshaper
 from bidi.algorithm import get_display
- 
-def fix_arabic_text(cell):
-    try:
-        reshaped_text = arabic_reshaper.reshape(cell)  # Reshape Arabic characters
-        bidi_text = get_display(reshaped_text)  # Apply BiDi algorithm
-        return bidi_text
-    except Exception:
-        return cell  # Return as is if not Arabic
-    
+from joblib import Memory
+
+
+# Define a directory for cache storage
+memory = Memory("./cache_dir", verbose=0)
+
+@memory.cache
 def get_pdf_tables(pdf_docs):
     pdfs_reader = []
     for pdf in pdf_docs:
@@ -20,6 +18,17 @@ def get_pdf_tables(pdf_docs):
     return pdfs_reader
 
 
+
+def fix_arabic_text(cell):
+    try:
+        reshaped_text = arabic_reshaper.reshape(cell)  # Reshape Arabic characters
+        bidi_text = get_display(reshaped_text)  # Apply BiDi algorithm
+        return bidi_text
+    except Exception:
+        return cell  # Return as is if not Arabic
+    
+    
+@memory.cache
 def get_tableList_from_tables(pdfs_tables):
     tablesList = []
     for tables in pdfs_tables:

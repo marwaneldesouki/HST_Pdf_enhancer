@@ -1,6 +1,8 @@
-pip install ghostscript
-pip install python-dotenv==1.0.0
-pip install langchain==0.0.184
-pip install opencv-python
-pip install camelot-py
-matplotlib 3.10.0
+ghostscript==0.7
+python-dotenv==1.0.0
+langchain==0.0.184
+opencv-python==4.10.0.84
+opencv-python-headless==4.10.0.84
+camelot-py==0.11.0 
+matplotlib==3.10.0
+pytesseract==0.3.13

@@ -6,3 +6,8 @@ opencv-python-headless==4.10.0.84
 camelot-py==0.11.0 
 matplotlib==3.10.0
 pytesseract==0.3.13
+arabic-reshaper==3.0.0
+python-bidi==0.6.3
+joblib==1.4.2
+pdf2image==1.17.0
+ghostscript==0.7

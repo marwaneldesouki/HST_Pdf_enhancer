@@ -1,2 +1,9 @@
 documents
 cache_dir
+temp
+documents_pdfs
+cropped_images
+cropped_images_old
+cache_dir
+.venv
+__pycache__

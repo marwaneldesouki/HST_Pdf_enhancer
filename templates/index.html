@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام البحث في القضايا</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .search-form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-input {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+        .result-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .result-card h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .field {
+            margin-bottom: 8px;
+        }
+        .field-label {
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .results-count {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">نظام البحث في القضايا</h1>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">عرض جميع القضايا</span>
+            <form method="post" id="toggleForm" style="display: inline;">
+                <label class="switch">
+                    <input type="checkbox" name="show_all" {% if show_all %}checked{% endif %} onchange="this.form.submit()">
+                    <span class="slider"></span>
+                </label>
+                {% if not show_all and query %}
+                <input type="hidden" name="query" value="{{ query }}">
+                {% endif %}
+            </form>
+            <span class="toggle-label">عرض البحث فقط</span>
+        </div>
+
+        {% if not show_all %}
+            <form class="search-form" method="post">
+                <input type="hidden" name="show_all" value="false">
+                <input type="text" name="query" class="search-input" placeholder="ادخل كلمة البحث..." value="{{ query if query else '' }}">
+                <button type="submit" class="search-button">بحث</button>
+            </form>
+        {% endif %}
+
+        {% if results %}
+            <div class="results-count">
+                عدد النتائج: {{ results|length }}
+            </div>
+            {% for result in results %}
+                <div class="result-card">
+                    <h3>قضية رقم: {{ result.Case_number }}</h3>
+                    
+                    {% if result.judgment_or_decision_info %}
+                        <div class="field">
+                            <span class="field-label">الحكم او القرار:</span>
+                            <span>{{ result.judgment_or_decision_info }}</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="field">
+                        <span class="field-label">الجلسة السابقة:</span>
+                        <span>{{ result.Previous_session_date }}</span>
+                        {% if result.Previous_session_infos %}
+                            - {{ result.Previous_session_infos }}
+                        {% endif %}
+                    </div>
+
+                    <div class="field">
+                        <span class="field-label">المدعي عليه:</span>
+                        <span>{{ ', '.join(result.defendant_names) if result.defendant_names else '' }}</span>
+                    </div>
+
+                    <div class="field">
+                        <span class="field-label">المدعي:</span>
+                        <span>{{ result.Plaintiff_name }}</span>
+                    </div>
+
+                    <div class="field">
+                        <span class="field-label">الجدول:</span>
+                        <span>{{ result.table_name }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            {% if query and not show_all %}
+                <p style="text-align: center;">لا توجد نتائج للبحث</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html> 
